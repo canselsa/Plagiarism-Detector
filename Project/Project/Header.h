@@ -23,9 +23,7 @@ vector<string> sentenceToWords(int i, vector<string> a)
 		string subs; 
 		iss >> subs; 
 	
-
-		if (subs != "")
-		{
+		if (subs != "")	{
 		        	if (subs[0] <= 'Z' && subs[0] >= 'A') {
 				subs[0] = subs[0] + 32;
 			  
