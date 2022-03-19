@@ -1,10 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include <fstream> //ReadFile (file.open)
-#include <string>  //string.find() , substr (substring)
-#include <sstream> //[sentenceToWords inside the istringstream]
-#include <vector>  //Vector definition
+#include <fstream> 
+#include <string>  
+#include <sstream> 
+#include <vector>  
 #include <algorithm>
 
 using namespace std;
@@ -14,20 +14,19 @@ using namespace std;
 //O(n) for n words in sentence.
 vector<string> sentenceToWords(int i, vector<string> a)
 {
-	vector<string> b; // where we hold the words (we separated from the sentence)
+	vector<string> b; 
 
 	istringstream iss(a[i]); //are sentences 
 
 	while (iss)
 	{
-		string subs; // substring
-		iss >> subs; // we divide sentences into words 
+		string subs; 
+		iss >> subs; 
 	
 
-		if (subs != "") //if is not space it continues
+		if (subs != "")
 		{
-			//If the initials of the words are UpperCase, they will be converted to LowerCase
-			if (subs[0] <= 'Z' && subs[0] >= 'A') {
+		        	if (subs[0] <= 'Z' && subs[0] >= 'A') {
 				subs[0] = subs[0] + 32;
 			  
 				b.push_back(subs);
@@ -38,12 +37,9 @@ vector<string> sentenceToWords(int i, vector<string> a)
 			}
 		}
 	}
-	//If it is empty (here it is first if statement) it finishes the work and returns b
 	return b;
 }
 
-//Similar to sentenceToWords -  but it just counts instead of keeping words.
-//Inputs are just a sentence of the document
 // O(n) for n words in sentence.
 int wordCount(string Sentence)
 {
@@ -56,10 +52,10 @@ int wordCount(string Sentence)
 		iss >> subs;
 		if (subs != "")
 		{
-			counter++; //when the words is found, increase the counter
+			counter++; 
 		}
 	}
-	return counter; // when the word is found counter is returned.
+	return counter; 
 }
 
 //We give doesExist the word/-s to search, and the sentence it searches. 
@@ -67,42 +63,40 @@ int wordCount(string Sentence)
 //O(n) for n words.
 int doesExist(vector<string> Words, string Sentence)
 {
-	int found_word_counter = 0; //Word counter of founded word
-	int found_location = 0;     //location of the founded word
-	for (int index = 0; index < Words.size(); index++)   //For each word
+	int found_word_counter = 0; 
+	int found_location = 0;    
+	for (int index = 0; index < Words.size(); index++)   
 	{
-		found_location = Sentence.find(Words[index]); // We are searching for the word in a normal way.
+		found_location = Sentence.find(Words[index]);
 		if (found_location < 0) {
 			Words[index][0] = Words[index][0] - 32;
 			found_location = Sentence.find(Words[index]);
 		}
 
-		if (Sentence == "" || Sentence == " ")  // The sentence can sometimes be empty or even a space
+		if (Sentence == "" || Sentence == " ")  
 		{
 			return found_word_counter;
 		}
 
 		if (found_location >= 0) //word is founded
 		{
-			int isThere = found_location + Words[index].length(); //Getting the location after the word
-			string before = Sentence.substr(0, found_location); //The part up to the word is separated
+			int isThere = found_location + Words[index].length(); 
+			string before = Sentence.substr(0, found_location); 
 
 			try
 			{
-				if (Sentence.at(isThere) == ' ')   // If there is a blank space after the word, it is a successful search. 
-					                              // Word found, exact match.
+				if (Sentence.at(isThere) == ' ')   
 				{
 					found_word_counter++;
-					string after = Sentence.substr(found_location + Words[index].length() + 1, Sentence.length()); // After the word is cut off.
-					Sentence = before + after; // Merging before and after the words. Then it is assigned to our sentence.
+					string after = Sentence.substr(found_location + Words[index].length() + 1, Sentence.length()); 
+					Sentence = before + after; 
 				}
 			}
-			catch (const exception e)  // If it tries to reach beyond the word at the end of the sentence, it will throw an out-of-bound error.
-		   						       //So it is kept with try - catch.The word entering here is exactly matched.
+			catch (const exception e)  
 				{ 
 				found_word_counter++;
-				string after = Sentence.substr(found_location + Words[index].length(), Sentence.length()); // After the word is cut off.
-				Sentence = before + after;  // Merging before and after the words. Then it is assigned to our sentence.
+				string after = Sentence.substr(found_location + Words[index].length(), Sentence.length()); 
+				Sentence = before + after;  
 			}
 		}
 	}
@@ -122,22 +116,19 @@ vector<vector<double>> comparison(vector<string> MainDocument, vector<string> Co
 
 		for (int j = 0; j < ComparedDocument.size(); j++)
 		{
-			string Sentence; //The sentences of the 2nd file will be put into vector sentences in order.
+			string Sentence; 
 			Sentence = ComparedDocument[j]; // From the source document ?. sentence is taken.
 
-			int found_words = doesExist(GetWords, Sentence); // How many words were found
+			int found_words = doesExist(GetWords, Sentence); 
 
-			if (found_words != 0) //if the found_words is not 0 (it means we found words)
+			if (found_words != 0) 
 			{
 				similarity = (double)found_words / (double)wordCount(Sentence);
 			}
 			else
 			{
-				similarity = 0; // If 0 words are found, the similarity is 0
+				similarity = 0; 
 			}
-
-			// how many words have I found / how many words are there in the sentence
-
 			result[i][j] = similarity;
 		}
 	}
@@ -196,10 +187,7 @@ void findMostSimilars(vector<vector<double>> result, vector<string> MainDoc, vec
 	for (int repeat = 0; repeat <= 4; repeat++)
 	{
 		double maxVal = 0;
-		int locFirstDoc = -1, locSecDoc = -1;  /* So why are these described here?
-											Answer: The above loop is repeated depending on how many times the function has to be executed.
-											5 repetitions for 5 sentences.In each repetition, valuesand locations should be deleted
-											so that information does not hang over the next repetition.*/
+		int locFirstDoc = -1, locSecDoc = -1;  
 
 		for (int i = 0; i < result.size(); i++)
 		{
@@ -261,9 +249,6 @@ vector<string> linetoSentence(string line)
 	return lines;
 
 }
-
-//string vector variable where the sentences of the file to be opened are stored -
-//the name of the file to be opened
 
 vector<string> fileOpener(vector<string> docVector, string docName) {
 	ifstream File;
